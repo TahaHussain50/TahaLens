@@ -57,8 +57,7 @@ function App() {
         transports: ["websocket"],
         reconnection: true,
         reconnectionDelay: 1000,
-        reconnectionAttempts: 5,
-        withCredentials: true
+        reconnectionAttempts: 5
       });
 
       socketIo.on("connect", () => {
