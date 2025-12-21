@@ -58,6 +58,7 @@ function App() {
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionAttempts: 5,
+        withCredentials: true
       });
 
       socketIo.on("connect", () => {
