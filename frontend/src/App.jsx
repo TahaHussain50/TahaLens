@@ -29,7 +29,7 @@ import { addNewStory } from "./redux/storySlice";
 import { addNewPost } from "./redux/postSlice";
 import { addNewVideo } from "./redux/videoSlice";
 import { incrementUnreadMessage, moveUserToTop } from "./redux/messageSlice";
-export const serverUrl = "http://localhost:3000";
+export const serverUrl = "https://taha-lens-backend.vercel.app";
 
 function App() {
   useCurrentUser();
