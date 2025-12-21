@@ -7,7 +7,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "taha-lens.vercel.app",
+    origin: "https://taha-lens.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
   },
