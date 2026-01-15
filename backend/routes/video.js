@@ -1,5 +1,6 @@
 import express from "express";
 import checkLogin from "../middlewares/checkLogin.js";
+import dbConnect from "../middlewares/dbConnect.js";
 import { upload } from "../middlewares/multer.js";
 import {
   comment,
@@ -10,9 +11,16 @@ import {
 
 const videoRouter = express.Router();
 
-videoRouter.post("/upload", checkLogin, upload.single("media"), uploadVideo);
-videoRouter.get("/getAll", checkLogin, getAllVideos);
-videoRouter.get("/like/:videoId", checkLogin, like);
-videoRouter.post("/comment/:videoId", checkLogin, comment);
+videoRouter.post(
+  "/upload",
+  dbConnect,
+  checkLogin,
+  upload.single("media"),
+  uploadVideo
+);
+
+videoRouter.get("/getAll", dbConnect, checkLogin, getAllVideos);
+videoRouter.get("/like/:videoId", dbConnect, checkLogin, like);
+videoRouter.post("/comment/:videoId", dbConnect, checkLogin, comment);
 
 export default videoRouter;
