@@ -31,6 +31,5 @@ app.use("/api/story", storyRouter);
 app.use("/api/message", messageRouter);
 
 server.listen(port, () => {
-  connectDB();
   console.log(`Example app listening on port ${port}`);
 });
