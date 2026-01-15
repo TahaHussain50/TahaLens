@@ -62,7 +62,10 @@ function LogIn() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      setErr(error.response?.data?.message);
+      setErr(
+  error.response?.data?.message || 
+  "Server error, please try again"
+);
     }
   };
 
