@@ -1,4 +1,5 @@
 import express from "express";
+import dbConnect from "../middlewares/dbConnect.js";
 import {
   editProfile,
   follow,
@@ -15,16 +16,23 @@ import { upload } from "../middlewares/multer.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/current", checkLogin, getCurrentUser);
-userRouter.get("/suggested", checkLogin, suggestedUsers);
-userRouter.get("/getProfile/:userName", checkLogin, getProfile);
-userRouter.get("/follow/:targetUserId", checkLogin, follow);
-userRouter.get("/followingList", checkLogin, followingList);
-userRouter.get("/search", checkLogin, search);
-userRouter.get("/getAllNotifications", checkLogin, getAllNotifications);
-userRouter.post("/markAsRead", checkLogin, markAsRead);
+userRouter.get("/current", dbConnect, checkLogin, getCurrentUser);
+userRouter.get("/suggested", dbConnect, checkLogin, suggestedUsers);
+userRouter.get("/getProfile/:userName", dbConnect, checkLogin, getProfile);
+userRouter.get("/follow/:targetUserId", dbConnect, checkLogin, follow);
+userRouter.get("/followingList", dbConnect, checkLogin, followingList);
+userRouter.get("/search", dbConnect, checkLogin, search);
+userRouter.get(
+  "/getAllNotifications",
+  dbConnect,
+  checkLogin,
+  getAllNotifications
+);
+userRouter.post("/markAsRead", dbConnect, checkLogin, markAsRead);
+
 userRouter.post(
   "/editProfile",
+  dbConnect,
   checkLogin,
   upload.single("profileImage"),
   editProfile
