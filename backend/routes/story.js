@@ -1,5 +1,6 @@
 import express from "express";
 import checkLogin from "../middlewares/checkLogin.js";
+import dbConnect from "../middlewares/dbConnect.js";
 import { upload } from "../middlewares/multer.js";
 import {
   getAllStories,
@@ -10,9 +11,22 @@ import {
 
 const storyRouter = express.Router();
 
-storyRouter.post("/upload", checkLogin, upload.single("media"), uploadStory);
-storyRouter.get("/getByUserName/:userName", checkLogin, getStoryByUserName);
-storyRouter.get("/getAll", checkLogin, getAllStories);
-storyRouter.get("/view/:storyId", checkLogin, viewStory);
+storyRouter.post(
+  "/upload",
+  dbConnect,
+  checkLogin,
+  upload.single("media"),
+  uploadStory
+);
+
+storyRouter.get(
+  "/getByUserName/:userName",
+  dbConnect,
+  checkLogin,
+  getStoryByUserName
+);
+
+storyRouter.get("/getAll", dbConnect, checkLogin, getAllStories);
+storyRouter.get("/view/:storyId", dbConnect, checkLogin, viewStory);
 
 export default storyRouter;
