@@ -1,3 +1,5 @@
+import axios from "axios";
+axios.defaults.withCredentials = true;
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
@@ -48,75 +50,22 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userData?._id || socket) {
-      fetchPrevChats();
-      const socketIo = io(serverUrl, {
-        query: {
-          userId: userData?._id,
-        },
-        transports: ["websocket"],
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5
-      });
+  if (!userData?._id || socket) return;
 
-      socketIo.on("connect", () => {
-        dispatch(setSocket(socketIo));
-      });
+  const socketIo = io(serverUrl, {
+    query: { userId: userData._id },
+    transports: ["websocket"],
+  });
 
-      socketIo.on("getOnlineUsers", (users) => {
-        dispatch(setOnlineUsers(users));
-      });
+  dispatch(setSocket(socketIo));
 
-      socketIo.on("newStory", (story) => {
-        dispatch(addNewStory(story));
-      });
+  return () => {
+    socketIo.disconnect();
+    dispatch(setSocket(null));
+    dispatch(setOnlineUsers([]));
+  };
+}, [userData?._id]);
 
-      socketIo.on("newPost", (post) => {
-        dispatch(addNewPost(post));
-      });
-
-      socketIo.on("newVideo", (video) => {
-        dispatch(addNewVideo(video));
-      });
-
-      socketIo.on("newNotification", (notification) => {
-        dispatch(setNotificationData(notification));
-      });
-
-      socketIo.on("newMessage", (message) => {
-        const senderId = message.sender;
-
-        if (!selectedUser || selectedUser._id !== senderId) {
-          dispatch(incrementUnreadMessage(senderId));
-        }
-
-        dispatch(moveUserToTop(senderId));
-      });
-
-      socketIo.on("disconnect", () => {});
-
-      return () => {
-        socketIo.off("newStory");
-        socketIo.off("newPost");
-        socketIo.off("newVideo");
-        socketIo.off("connect");
-        socketIo.off("getOnlineUsers");
-        socketIo.off("newNotification");
-        socketIo.off("newMessage");
-        socketIo.off("disconnect");
-        socketIo.close();
-        dispatch(setSocket(null));
-        dispatch(setOnlineUsers([]));
-      };
-    } else {
-      if (socket) {
-        socket.close();
-        dispatch(setSocket(null));
-        dispatch(setOnlineUsers([]));
-      }
-    }
-  }, [userData?._id]);
 
   return (
     <>
