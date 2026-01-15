@@ -1,16 +1,21 @@
 import mongoose from "mongoose";
 
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected) return;
+
   try {
-    await mongoose.connect(process.env.MONGODB_URL, {
-      useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 30000, // 30 seconds
-  socketTimeoutMS: 45000,
+    const conn = await mongoose.connect(process.env.MONGODB_URL, {
+      dbName: "taha_lens", // 👈 apna DB name
+      bufferCommands: false,
     });
-    console.log("Database Connected...");
+
+    isConnected = true;
+    console.log("MongoDB Connected:", conn.connection.host);
   } catch (error) {
-    console.log("Database Error Not Connected!!!");
+    console.error("MongoDB Connection Error:", error.message);
+    throw error;
   }
 };
 
